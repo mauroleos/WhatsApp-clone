@@ -13,6 +13,7 @@ function Sidebar() {
             <div className="sidebar__header">
                 <Avatar src="https://avatars.githubusercontent.com/u/60679353?s=400&u=2ddc3227d206dd164c2e4c8a66c46a68eea5f9d5&v=4"/>
                 <div className="sidebar__headerRight">
+                    {/* IconButton is imported from material UI and gives it that clickable feeleing */}
                     <IconButton>
                         <DonutLargeIcon />
                     </IconButton>
