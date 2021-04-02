@@ -38,7 +38,7 @@ function Chat({ messages }) {
                 </div>
 
                 <div className="chat__headerRight">
-                    test
+                    TEST
                     <IconButton>
                         <Search />
                     </IconButton>
