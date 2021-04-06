@@ -38,7 +38,6 @@ function Chat({ messages }) {
                 </div>
 
                 <div className="chat__headerRight">
-                    TEST
                     <IconButton>
                         <Search />
                     </IconButton>
