@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import './App.css';
+import "./App.css";
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
+import Login from "./Login";
 import Pusher from "pusher-js";
 import axios from "./axios";
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
@@ -41,7 +42,7 @@ function App() {
     <div className="app">
 
       {!user ? (
-        <h1>LOGIN</h1>
+        <Login />
       ): (
         <div className = "app__body">
         <Router>
