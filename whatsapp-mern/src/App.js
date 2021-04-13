@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 function App() {
   const [messages, setMessages] = useState([]);
+  const [user, setUser] = useState(null);
   
   useEffect(()=> {
     //responsible for fetching all the initial info
@@ -38,7 +39,11 @@ function App() {
 
   return (
     <div className="app">
-      <div className = "app__body">
+
+      {!user ? (
+        <h1>LOGIN</h1>
+      ): (
+        <div className = "app__body">
         <Router>
           <Sidebar />
           
@@ -54,6 +59,7 @@ function App() {
           </Switch>
         </Router>
       </div>
+      )}
     </div>
   );
 }
