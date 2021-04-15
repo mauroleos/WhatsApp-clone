@@ -9,18 +9,25 @@ import { useParams } from "react-router-dom";
 import "./Chat.css"
 import axios from "./axios";
 import db from "./firebase";
+import { useStateValue } from "./StateProvider";
+import firebase from "firebase";
 
-function Chat({ messages }) {
+function Chat() {
     const [input, setInput] = useState("");
     const [seed, setSeed] = useState("");
     const { roomId } = useParams();
     const [roomName, setRoomName] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [{ user }, dispatch] = useStateValue();
 
-    useEffect(() =>{
+    useEffect(() => {
         if (roomId) {
-            db.collection("rooms").doc(roomId).onSnapshot(snapshot => (
-                setRoomName(snapshot.data().name)
-            ))
+            db.collection("rooms").doc(roomId).onSnapshot((snapshot) =>
+                setRoomName(snapshot.data().name));
+
+                db.collection("rooms").doc(roomId).collection("messages").orderBy("timestamp","asc").onSnapshot(snapshot => (
+                    setMessages(snapshot.docs.map((doc) => doc.data()))
+                ))
         }
     }, [roomId]);
 
@@ -37,6 +44,13 @@ function Chat({ messages }) {
             timestamp: "Just now!",
             received: false,
         });
+
+        db.collection("rooms").doc(roomId).collection("messages").add({
+            message: input,
+            name: user.displayName,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+
         setInput("");
     };
     return(
@@ -46,7 +60,11 @@ function Chat({ messages }) {
 
                 <div className="chat__headerInfo">
                     <h3>{roomName}</h3>
-                    <p>Last seen at...</p>
+                    <p>
+                        last seen{" "}
+                        {new Date(
+                            messages[messages.length - 1]?.timestamp?.toDate()).toUTCString()}
+                    </p>
                 </div>
 
                 <div className="chat__headerRight">
@@ -61,13 +79,13 @@ function Chat({ messages }) {
                     </IconButton>
                 </div>
             </div>
-            
+             
             <div className="chat__body">
                 {messages.map((message) => (
-                    <p className={`chat__message ${message.received && "chat__receiver"}`}>
+                    <p className={`chat__message ${message.name ===user.displayName && "chat__receiver"}`}>
                         <span className="chat__name">{message.name}</span>
                         {message.message}
-                        <span className="chat__timestamp">{message.timestamp}</span>
+                        <span className="chat__timestamp">{new Date(message.timestamp?.toDate()).toUTCString()}</span>
                     </p>
                 ))}
             </div>
